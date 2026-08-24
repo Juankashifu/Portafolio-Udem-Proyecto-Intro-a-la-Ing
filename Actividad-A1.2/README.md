@@ -126,11 +126,10 @@ A continuación se presentan las evidencias de funcionamiento del sistema tanto 
 
 ### 4.2 Demostración en Hardware (Físico)
 <p align="center">
-  <video src="Recursos/videos/Video_Funcionamiento_Fisico.mp4" width="600" controls>
-    Tu navegador no soporta la reproducción de video HTML5.
-  </video>
-</p>
 
+https://github.com/user-attachments/assets/6c6a2f0c-a02e-4ec5-8352-e64ee4a22516
+
+</p>
 > 📹 **Respaldo:** En caso de requerir descarga directa, el archivo multimedia se encuentra en [`Video_Funcionamiento_Fisico.mp4`](./Recursos/videos/Video_Funcionamiento_Fisico.mp4)[cite: 1].
 
 ---
