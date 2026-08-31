@@ -142,9 +142,7 @@ A continuación se presentan las evidencias de funcionamiento del sistema, demos
 
 ### 4.2 Demostración en Hardware (Físico)
 <p align="center">
-
-Actividad-A1.3/Recursos/videos/Video_Funcionamiento_Fisico.mp4
-
+https://github.com/user-attachments/assets/06cc7255-c261-40ac-8fbf-f725f19c14de
 </p>
 > 📹 **Respaldo:** En caso de requerir descarga directa, el archivo multimedia de funcionamiento físico se encuentra en [`Video_Funcionamiento_Fisico.mp4`](./Recursos/videos/Video_Funcionamiento_Fisico.mp4).
 
