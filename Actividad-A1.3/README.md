@@ -124,8 +124,10 @@ void seleccionarNuevoLED() {
   Serial.print("LED encendido: ");
   Serial.println(ledActivo + 1);
 }
-´´´
+```
 (Nota: El archivo fuente tipo .ino se encuentra adjunto en el repositorio ).  
+
+---
 
  ## 4) Resultados
 
