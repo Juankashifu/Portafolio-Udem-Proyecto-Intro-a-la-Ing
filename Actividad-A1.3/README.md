@@ -17,9 +17,9 @@
 
 ## 2) Introducción
 
-El presente reporte documenta la segunda fase del desarrollo de nuestro sistema de entretenimiento. [cite_start]Si bien en la entrega anterior se logró controlar un solo LED mediante un botón, esta nueva iteración escala la complejidad del hardware y del software al integrar 3 botones y 3 LEDs[cite: 10, 15]. 
+El presente reporte documenta la segunda fase del desarrollo de nuestro sistema de entretenimiento. Si bien en la entrega anterior se logró controlar un solo LED mediante un botón, esta nueva iteración escala la complejidad del hardware y del software al integrar 3 botones y 3 LEDs. 
 
-[cite_start]El objetivo general del sistema en esta etapa es encender uno de los 3 LEDs de forma completamente aleatoria al iniciar el programa[cite: 17]. [cite_start]Dicho LED debe permanecer encendido hasta que el usuario presione de manera exclusiva su botón correspondiente[cite: 18]. [cite_start]Si se presiona un botón incorrecto, el sistema está programado para mantener su estado e ignorar la acción. [cite_start]Una vez que se acierta, la luz se apaga y se selecciona un nuevo color al azar de forma inmediata[cite: 19]. Este avance sienta las bases de la lógica condicional y aleatoria requerida para el juego de memoria final.
+El objetivo general del sistema en esta etapa es encender uno de los 3 LEDs de forma completamente aleatoria al iniciar el programa. Dicho LED debe permanecer encendido hasta que el usuario presione de manera exclusiva su botón correspondiente. Si se presiona un botón incorrecto, el sistema está programado para mantener su estado e ignorar la acción. Una vez que se acierta, la luz se apaga y se selecciona un nuevo color al azar de forma inmediata. Este avance sienta las bases de la lógica condicional y aleatoria requerida para el juego de memoria final.
 
 ---
 
@@ -27,7 +27,7 @@ El presente reporte documenta la segunda fase del desarrollo de nuestro sistema 
 
 ### 3.1 Conexiones y Hardware
 
-[cite_start]**Componentes utilizados y justificación técnica:**
+**Componentes utilizados y justificación técnica:**
 
 - **1 Placa Microcontroladora:** Arduino Uno R3.
 - **3 LEDs (2 Rojos, 1 Azul):** Actúan como los indicadores visuales del sistema.
@@ -38,7 +38,7 @@ El presente reporte documenta la segunda fase del desarrollo de nuestro sistema 
 - **3 Resistencias de 10 kΩ (Pull-Down para los botones):** Esenciales para evitar el estado de "pin flotante". Garantizan que el microcontrolador lea un cero lógico (LOW o 0 V) de manera estable cuando los botones están en reposo, filtrando el ruido electromagnético.
 - **Protoboard y Jumpers:** Para el ensamblaje del circuito físico.
 
-[cite_start]**Descripción de las conexiones físicas[cite: 26]:**
+**Descripción de las conexiones físicas:**
 
 - **Circuito de Salida (LEDs):** Los ánodos (terminales positivas) de los tres LEDs se conectaron a los **Pines Digitales 4, 5 y 6** del Arduino. Los cátodos (terminales negativas) se conectaron en serie a sus respectivas resistencias de 220 Ω, cerrando el circuito hacia el riel de tierra (**GND**).
 - **Circuito de Entrada (Botones):** Un extremo de cada pulsador se conectó al riel de **5V**. El extremo opuesto de cada uno se ramificó hacia dos puntos: a los **Pines Digitales 11, 12 y 13** para su lectura, y a sus respectivas resistencias pull-down de 10 kΩ hacia **GND**.
@@ -48,27 +48,27 @@ El presente reporte documenta la segunda fase del desarrollo de nuestro sistema 
  <img src="Recursos/imgs/Circuito_tinkercad.png" alt="Demostración Digital en Tinkercad" width="1200">
 </p>
 
-[cite_start]*(Nota: El archivo de imagen se encuentra adjunto en el repositorio [cite: 27]).*
+*(Nota: El archivo de imagen se encuentra adjunto en el repositorio ).*
 
 ---
 
 ### 3.2 Diseño de Software
 
-[cite_start]El código fuente implementa una lógica de arreglos paralelos y muestreo condicional para vincular los componentes de hardware sin bloquear la ejecución del microcontrolador[cite: 28, 29].
+El código fuente implementa una lógica de arreglos paralelos y muestreo condicional para vincular los componentes de hardware sin bloquear la ejecución del microcontrolador.
 
 **Lógica de Vinculación (Arreglos):**
-[cite_start]En lugar de manejar 6 variables sueltas, se utilizaron dos listas (arreglos) que comparten el mismo tamaño y orden lógico: una para los pines de los LEDs (4, 5, 6) y otra para los pines de los botones (11, 12, 13)[cite: 30]. [cite_start]De esta manera, el sistema sabe que el componente en la posición "0" de la lista de LEDs está emparejado obligatoriamente con el componente en la posición "0" de la lista de botones[cite: 30].
+En lugar de manejar 6 variables sueltas, se utilizaron dos listas (arreglos) que comparten el mismo tamaño y orden lógico: una para los pines de los LEDs (4, 5, 6) y otra para los pines de los botones (11, 12, 13). De esta manera, el sistema sabe que el componente en la posición "0" de la lista de LEDs está emparejado obligatoriamente con el componente en la posición "0" de la lista de botones.
 
 **Configuración Inicial (`setup`):**
 Se iteran las listas para configurar todos los pines de manera eficiente. Los LEDs se declaran como salidas (`OUTPUT`) y se apagan inicialmente, mientras que los botones se configuran como entradas (`INPUT`). Adicionalmente, se genera una semilla aleatoria leyendo el "ruido" de un pin analógico desconectado (`analogRead(A0)`). Esto asegura que la secuencia de luces sea impredecible cada vez que se reinicia el sistema. Finalmente, se manda llamar a la función para encender el primer LED.
 
 **Ejecución Principal (`loop`):**
-[cite_start]El sistema guarda en memoria la posición (índice) del LED que se encuentra encendido actualmente[cite: 30]. En cada ciclo, el Arduino **únicamente** lee el estado del botón que comparte esa misma posición. 
-- [cite_start]Si se presiona cualquier otro botón, el código lo ignora por completo, manteniendo el LED encendido.
+El sistema guarda en memoria la posición (índice) del LED que se encuentra encendido actualmente. En cada ciclo, el Arduino **únicamente** lee el estado del botón que comparte esa misma posición. 
+- Si se presiona cualquier otro botón, el código lo ignora por completo, manteniendo el LED encendido.
 - Si el botón correcto es presionado, el sistema apaga el LED, ejecuta un pequeño retardo (antirrebote) para asegurar que el usuario ha soltado el botón, y llama a la función de selección aleatoria.
 
 **Selección Aleatoria Segura:**
-La función que elige el nuevo LED utiliza un ciclo matemático (`do-while`) para generar números al azar. [cite_start]Su propósito es garantizar que el nuevo LED elegido nunca sea el mismo que se acaba de apagar, forzando al sistema a buscar un número distinto y haciendo el juego más dinámico[cite: 30].
+La función que elige el nuevo LED utiliza un ciclo matemático (`do-while`) para generar números al azar. Su propósito es garantizar que el nuevo LED elegido nunca sea el mismo que se acaba de apagar, forzando al sistema a buscar un número distinto y haciendo el juego más dinámico.
 
 **Código Fuente:**
 
