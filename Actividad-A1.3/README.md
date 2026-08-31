@@ -1,138 +1,126 @@
-# A1.3 Avances de Proyecto 2
+# 📚 Actividad A1.3: Avances de Proyecto 2 — Sistema de 3 Botones y 3 LEDs
 
-## 1. Introducción
-El presente reporte documenta la segunda fase de desarrollo de un sistema de entretenimiento interactivo. El objetivo principal de esta iteración es escalar el sistema inicial (de un solo botón y un LED) a una interfaz que integra 3 botones de distintos colores y 3 luces LED correspondientes. El sistema debe ser capaz de seleccionar y encender un LED de forma aleatoria, manteniendo este estado hasta que el usuario presione exclusivamente el botón del color asociado. Una vez presionado el botón correcto, el ciclo se reinicia seleccionando un nuevo LED al azar. Este avance sienta las bases lógicas para la futura implementación de contadores de aciertos, temporizadores y retroalimentación auditiva.
+> Segunda etapa de un sistema de entretenimiento tipo juego de memoria, desarrollado con Arduino para la materia de Proyectos Intro a la Ingeniería (UDEM). En esta iteración se incorporan múltiples entradas/salidas y selección aleatoria.
 
-## 2. Metodología
+---
 
-### 2.1. Diseño de Hardware y Conexiones
-Para la construcción del circuito se utilizaron los siguientes componentes:
-*   **Microcontrolador:** [Modelo, ej. Arduino Uno] utilizado como cerebro del sistema.
-*   **LEDs:** 3 diodos emisores de luz (colores [Color 1, Color 2, Color 3]).
-*   **Botones:** 3 push buttons (pulsadores) asociados a cada color.
-*   **Resistencias:** [Ej. 3 resistencias de 220 Ω para limitar la corriente de los LEDs y 3 de 10 kΩ para configuración pull-down de los botones].
+## 1) Resumen
 
-**Justificación técnica:** 
-[Aquí se redactará la justificación técnica basada en la Ley de Ohm para los LEDs y la necesidad de asegurar estados lógicos definidos (LOW/HIGH) en los pines de lectura de los botones].
+- **Materia:** Proyectos Intro a la Ingeniería
+- **Profesor:** Dr. Antonio Martínez Torteya
+- **Equipo:** Juan Carlos Valdés Pérez, Antonio Isidoro Ureña Chaidez, Marcelo Cantú Palacios, Sofía Posas
+- **Fecha:** 31/08/2026
+- **Placa:** Arduino Uno R3 (Elegoo)
+- **Descripción breve:** Expansión del circuito inicial para controlar 3 LEDs (dos rojos y uno azul) mediante 3 botones (*push buttons*). El sistema enciende un LED al azar y evalúa de forma continua las entradas; solo al presionar el botón que corresponde exactamente al LED activo, este se apaga y se genera una nueva selección aleatoria.
 
-![Diagrama de Conexiones del Sistema]([nombre_de_tu_imagen.jpg/png])
-*Figura 1. Diagrama de conexiones implementado en Tinkercad.*
+---
 
-### 2.2. Diseño de Software
+## 2) Introducción
 
-El código fuente fue estructurado para garantizar que la aleatoriedad y la lectura de los estados de los botones se ejecuten de manera eficiente y sin bloqueos innecesarios.
+El presente reporte documenta la segunda fase del desarrollo de nuestro sistema de entretenimiento. [cite_start]Si bien en la entrega anterior se logró controlar un solo LED mediante un botón, esta nueva iteración escala la complejidad del hardware y del software al integrar 3 botones y 3 LEDs[cite: 10, 15]. 
 
-**Configuración Inicial (`setup`):**
-[Aquí se explicará la configuración de los pines como `OUTPUT` e `INPUT`, así como la inicialización de la semilla para la función random].
+[cite_start]El objetivo general del sistema en esta etapa es encender uno de los 3 LEDs de forma completamente aleatoria al iniciar el programa[cite: 17]. [cite_start]Dicho LED debe permanecer encendido hasta que el usuario presione de manera exclusiva su botón correspondiente[cite: 18]. [cite_start]Si se presiona un botón incorrecto, el sistema está programado para mantener su estado e ignorar la acción. [cite_start]Una vez que se acierta, la luz se apaga y se selecciona un nuevo color al azar de forma inmediata[cite: 19]. Este avance sienta las bases de la lógica condicional y aleatoria requerida para el juego de memoria final.
 
-**Lógica Principal (`loop`):**
-[Aquí detallaremos cómo el sistema: 1) Selecciona un número aleatorio, 2) Enciende el LED correspondiente, 3) Entra en un estado de espera leyendo constantemente los botones, y 4) Ignora las pulsaciones incorrectas hasta detectar el botón que hace "match" con el LED activo].
+---
 
-```cpp
-[Aquí se insertará el código fuente en C++]
-3. Resultados y Funcionamiento
-Al energizar el sistema, se comprobó que el comportamiento cumple con las especificaciones establecidas. Al encenderse un LED al azar, presionar los botones no correspondientes no altera el estado del sistema, demostrando un correcto filtrado de entradas incorrectas. Únicamente al presionar el botón del color correcto, el LED se apaga y el sistema genera una nueva selección aleatoria de forma inmediata.
+## 3) Metodología
 
-A continuación, se presenta la evidencia en video del funcionamiento:
-[Enlace al video demostrativo]
+### 3.1 Conexiones y Hardware
 
-4. Conclusiones
-[Aquí redactaremos la conclusión técnica sobre la integración de múltiples entradas y salidas con lógica condicional cruzada y aleatoriedad en sistemas embebidos].
-"""
+[cite_start]**Componentes utilizados y justificación técnica:**
 
-file_path = "Reporte_A1.3_Borrador.md"
-with open(file_path, 'w', encoding='utf-8') as f:
-f.write(md_content)
+- **1 Placa Microcontroladora:** Arduino Uno R3.
+- **3 LEDs (2 Rojos, 1 Azul):** Actúan como los indicadores visuales del sistema.
+- **3 Resistencias de 220 Ω (Limitadoras para los LEDs):** Como se justificó en la práctica anterior, el voltaje directo de los LEDs ronda los 2.0 V a 3.0 V. Aplicando la Ley de Ohm para la fuente de 5 V del microcontrolador:
+  $$R = \frac{V_{\text{fuente}} - V_f}{I_f}$$
+  Una resistencia de **220 Ω** fija una corriente segura de entre 10 mA y 14 mA, protegiendo a los diodos contra daños por sobrecorriente y al Arduino de exceder su capacidad de salida por pin.
+- **3 Pulsadores (*Push Buttons*):** Interruptores momentáneos para la interacción del usuario.
+- **3 Resistencias de 10 kΩ (Pull-Down para los botones):** Esenciales para evitar el estado de "pin flotante". Garantizan que el microcontrolador lea un cero lógico (LOW o 0 V) de manera estable cuando los botones están en reposo, filtrando el ruido electromagnético.
+- **Protoboard y Jumpers:** Para el ensamblaje del circuito físico.
 
-print(f"[file-tag: {file_path}]")
+[cite_start]**Descripción de las conexiones físicas[cite: 26]:**
 
+- **Circuito de Salida (LEDs):** Los ánodos (terminales positivas) de los tres LEDs se conectaron a los **Pines Digitales 4, 5 y 6** del Arduino. Los cátodos (terminales negativas) se conectaron en serie a sus respectivas resistencias de 220 Ω, cerrando el circuito hacia el riel de tierra (**GND**).
+- **Circuito de Entrada (Botones):** Un extremo de cada pulsador se conectó al riel de **5V**. El extremo opuesto de cada uno se ramificó hacia dos puntos: a los **Pines Digitales 11, 12 y 13** para su lectura, y a sus respectivas resistencias pull-down de 10 kΩ hacia **GND**.
 
-```text?code_stdout&code_event_index=1
-[file-tag: Reporte_A1.3_Borrador.md]
+**Diagrama de conexiones:**
+![Diagrama de conexiones](Recursos/imgs/Circuito_tinkercad.png)
 
-Tu archivo Markdown (borrador inicial) está listo.
+[cite_start]*(Nota: El archivo de imagen se encuentra adjunto en el repositorio [cite: 27]).*
 
-Ícono de MD
-Reporte_A1.3_Borrador
- MD 
-Abrir
-He analizado a detalle las instrucciones de la práctica A1.3 y la rúbrica de evaluación del Dr. Torteya. He generado un primer borrador / plantilla estructural del reporte para asegurar que cubrimos todos los criterios necesarios para alcanzar el nivel "Proficient" en la rúbrica (como la justificación técnica de las conexiones, explicaciones claras del código y evidencia directa).  
-PDF
-+ 1
+---
 
-Sin embargo, para poder adaptarme exactamente a tu estilo de redacción y completar la información técnica, necesito que me ayudes con lo siguiente:
+### 3.2 Diseño de Software
 
-1. El README de ejemplo:
-Mencionaste que ibas a anexar un ejemplo de tu estilo de reporte, pero no se adjuntó en tu mensaje. Por favor, compárteme el texto de ese README (puedes pegarlo aquí directamente) para que yo pueda analizar cómo estructuras los párrafos, el tono que usas, si prefieres viñetas o texto continuo, etc.
+[cite_start]El código fuente implementa una lógica de arreglos paralelos y muestreo condicional para vincular los componentes de hardware sin bloquear la ejecución del microcontrolador[cite: 28, 29].
 
-2. Componentes y Conexiones (Hardware):
-
-¿Qué microcontrolador utilizaste (ej. Arduino Uno, ESP32)?
-
-¿Cuáles fueron los colores exactos de los 3 LEDs y los 3 botones?
-
-¿A qué pines (números exactos) conectaste cada LED y cada botón?
-
-¿Utilizaste resistencias físicas para los botones (pull-down/pull-up de 10kΩ) o activaste las resistencias internas del microcontrolador (INPUT_PULLUP)? ¿De qué valor fueron las resistencias para los LEDs?
-
-¿Cómo se llama el archivo de imagen de tu diagrama de conexiones (ej. diagrama_tinkercad.png) para referenciarlo correctamente en el Markdown?
-
-3. El Código (Software):
-Por favor, pega aquí el código fuente completo que utilizaste. Con esto redactaré la explicación paso a paso del setup, el loop, y la lógica matemática detrás de la selección aleatoria y la validación de estados.
-
-4. Evidencia:
-¿Tienes el enlace de YouTube o Drive de tu video demostrativo para incluirlo en la sección de Resultados?
-
-Una vez que me proporciones esta información y tu documento de ejemplo, reescribiré y refinaré este Markdown al 100% con tu propio estilo y con todos los fundamentos técnicos necesarios. ¡Quedo a la espera!
-
-
-
-
-Gemini es una IA y puede cometer errores.
-
-Analizando
-Explicar
-# A1.3 Avances de Proyecto 2
-
-## 1. Introducción
-El presente reporte documenta la segunda fase de desarrollo de un sistema de entretenimiento interactivo. El objetivo principal de esta iteración es escalar el sistema inicial (de un solo botón y un LED) a una interfaz que integra 3 botones de distintos colores y 3 luces LED correspondientes. El sistema debe ser capaz de seleccionar y encender un LED de forma aleatoria, manteniendo este estado hasta que el usuario presione exclusivamente el botón del color asociado. Una vez presionado el botón correcto, el ciclo se reinicia seleccionando un nuevo LED al azar. Este avance sienta las bases lógicas para la futura implementación de contadores de aciertos, temporizadores y retroalimentación auditiva.
-
-## 2. Metodología
-
-### 2.1. Diseño de Hardware y Conexiones
-Para la construcción del circuito se utilizaron los siguientes componentes:
-*   **Microcontrolador:** [Modelo, ej. Arduino Uno] utilizado como cerebro del sistema.
-*   **LEDs:** 3 diodos emisores de luz (colores [Color 1, Color 2, Color 3]).
-*   **Botones:** 3 push buttons (pulsadores) asociados a cada color.
-*   **Resistencias:** [Ej. 3 resistencias de 220 Ω para limitar la corriente de los LEDs y 3 de 10 kΩ para configuración pull-down de los botones].
-
-**Justificación técnica:** 
-[Aquí se redactará la justificación técnica basada en la Ley de Ohm para los LEDs y la necesidad de asegurar estados lógicos definidos (LOW/HIGH) en los pines de lectura de los botones].
-
-![Diagrama de Conexiones del Sistema]([nombre_de_tu_imagen.jpg/png])
-*Figura 1. Diagrama de conexiones implementado en Tinkercad.*
-
-### 2.2. Diseño de Software
-
-El código fuente fue estructurado para garantizar que la aleatoriedad y la lectura de los estados de los botones se ejecuten de manera eficiente y sin bloqueos innecesarios.
+**Lógica de Vinculación (Arreglos):**
+[cite_start]En lugar de manejar 6 variables sueltas, se utilizaron dos listas (arreglos) que comparten el mismo tamaño y orden lógico: una para los pines de los LEDs (4, 5, 6) y otra para los pines de los botones (11, 12, 13)[cite: 30]. [cite_start]De esta manera, el sistema sabe que el componente en la posición "0" de la lista de LEDs está emparejado obligatoriamente con el componente en la posición "0" de la lista de botones[cite: 30].
 
 **Configuración Inicial (`setup`):**
-[Aquí se explicará la configuración de los pines como `OUTPUT` e `INPUT`, así como la inicialización de la semilla para la función random].
+Se iteran las listas para configurar todos los pines de manera eficiente. Los LEDs se declaran como salidas (`OUTPUT`) y se apagan inicialmente, mientras que los botones se configuran como entradas (`INPUT`). Adicionalmente, se genera una semilla aleatoria leyendo el "ruido" de un pin analógico desconectado (`analogRead(A0)`). Esto asegura que la secuencia de luces sea impredecible cada vez que se reinicia el sistema. Finalmente, se manda llamar a la función para encender el primer LED.
 
-**Lógica Principal (`loop`):**
-[Aquí detallaremos cómo el sistema: 1) Selecciona un número aleatorio, 2) Enciende el LED correspondiente, 3) Entra en un estado de espera leyendo constantemente los botones, y 4) Ignora las pulsaciones incorrectas hasta detectar el botón que hace "match" con el LED activo].
+**Ejecución Principal (`loop`):**
+[cite_start]El sistema guarda en memoria la posición (índice) del LED que se encuentra encendido actualmente[cite: 30]. En cada ciclo, el Arduino **únicamente** lee el estado del botón que comparte esa misma posición. 
+- [cite_start]Si se presiona cualquier otro botón, el código lo ignora por completo, manteniendo el LED encendido.
+- Si el botón correcto es presionado, el sistema apaga el LED, ejecuta un pequeño retardo (antirrebote) para asegurar que el usuario ha soltado el botón, y llama a la función de selección aleatoria.
+
+**Selección Aleatoria Segura:**
+La función que elige el nuevo LED utiliza un ciclo matemático (`do-while`) para generar números al azar. [cite_start]Su propósito es garantizar que el nuevo LED elegido nunca sea el mismo que se acaba de apagar, forzando al sistema a buscar un número distinto y haciendo el juego más dinámico[cite: 30].
+
+**Código Fuente:**
 
 ```cpp
-[Aquí se insertará el código fuente en C++]
-```
+// Declaración de pines
+const int numComponentes = 3;
+const int leds[numComponentes] = {4, 5, 6};       // Pines de los LEDs
+const int botones[numComponentes] = {11, 12, 13};   // Pines de los botones correspondientes
 
-## 3. Resultados y Funcionamiento
-Al energizar el sistema, se comprobó que el comportamiento cumple con las especificaciones establecidas. Al encenderse un LED al azar, presionar los botones no correspondientes no altera el estado del sistema, demostrando un correcto filtrado de entradas incorrectas. Únicamente al presionar el botón del color correcto, el LED se apaga y el sistema genera una nueva selección aleatoria de forma inmediata.
+int ledActivo = -1; // Guarda el índice (0, 1 o 2) del LED encendido
 
-A continuación, se presenta la evidencia en video del funcionamiento:
-[Enlace al video demostrativo]
+void setup() {
+  randomSeed(analogRead(A0));
+  Serial.begin(9600);
 
-## 4. Conclusiones
-[Aquí redactaremos la conclusión técnica sobre la integración de múltiples entradas y salidas con lógica condicional cruzada y aleatoriedad en sistemas embebidos].
-Reporte_A1.3_Borrador.md
-Mostrando Reporte_A1.3_Borrador.md.
+  for (int i = 0; i < numComponentes; i++) {
+    pinMode(leds[i], OUTPUT);
+    pinMode(botones[i], INPUT); // Configuración Pull-Down externa
+    digitalWrite(leds[i], LOW);
+  }
+
+  // Prende el primer LED al azar al encender el Arduino
+  seleccionarNuevoLED();
+}
+
+void loop() {
+  // Solo evalúa el botón que CORRESPONDE al LED encendido actualmente
+  if (digitalRead(botones[ledActivo]) == HIGH) {
+    
+    // 1. Apaga el LED actual
+    digitalWrite(leds[ledActivo], LOW);
+    
+    // Antirrebote y espera a que sueltes el botón correcto
+    delay(200);
+    while (digitalRead(botones[ledActivo]) == HIGH);
+    delay(50);
+
+    // 2. Enciende otro LED al azar
+    seleccionarNuevoLED();
+  }
+  // Si presionas un botón incorrecto, el programa lo ignora y el LED se queda prendido
+}
+
+void seleccionarNuevoLED() {
+  int nuevoLed;
+  
+  // Garantiza que el nuevo LED elegido no sea el mismo que se acaba de apagar
+  do {
+    nuevoLed = random(0, numComponentes);
+  } while (nuevoLed == ledActivo);
+
+  ledActivo = nuevoLed;
+  digitalWrite(leds[ledActivo], HIGH);
+
+  Serial.print("LED encendido: ");
+  Serial.println(ledActivo + 1);
+}
