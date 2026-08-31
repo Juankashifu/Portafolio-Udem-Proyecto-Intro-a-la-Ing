@@ -124,3 +124,21 @@ void seleccionarNuevoLED() {
   Serial.print("LED encendido: ");
   Serial.println(ledActivo + 1);
 }
+´´´
+(Nota: El archivo fuente tipo .ino se encuentra adjunto en el repositorio ).  
+
+ ## 4) Resultados
+
+A continuación se presentan las evidencias de funcionamiento del sistema tanto en simulación digital como en montaje físico:
+
+### 4.1 Demostración en Simulación (Digital)
+<p align="center">
+  <img src="Recursos/videos/Gif_Funcionamiento_Tinkercad.gif" alt="Demostración Digital en Tinkercad" width="600">
+</p>
+
+### 4.2 Demostración en Hardware (Físico)
+<p align="center">
+https://github.com/user-attachments/assets/6c6a2f0c-a02e-4ec5-8352-e64ee4a22516
+
+</p>
+> 📹 **Respaldo:** En caso de requerir descarga directa, el archivo multimedia se encuentra en [`Video_Funcionamiento_Fisico.mp4`](./Recursos/videos/Video_Funcionamiento_Fisico.mp4)
