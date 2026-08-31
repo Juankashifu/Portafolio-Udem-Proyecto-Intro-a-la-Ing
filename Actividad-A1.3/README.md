@@ -44,7 +44,8 @@ El presente reporte documenta la segunda fase del desarrollo de nuestro sistema 
 - **Circuito de Entrada (Botones):** Un extremo de cada pulsador se conectó al riel de **5V**. El extremo opuesto de cada uno se ramificó hacia dos puntos: a los **Pines Digitales 11, 12 y 13** para su lectura, y a sus respectivas resistencias pull-down de 10 kΩ hacia **GND**.
 
 **Diagrama de conexiones:**
-![Diagrama de conexiones](Recursos/imgs/Circuito_tinkercad.png)
+![Diagrama de conexiones]
+(Recursos/imgs/Circuito_tinkercad.png)
 
 [cite_start]*(Nota: El archivo de imagen se encuentra adjunto en el repositorio [cite: 27]).*
 
