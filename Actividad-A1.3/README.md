@@ -129,9 +129,9 @@ void seleccionarNuevoLED() {
 
 ---
 
- ## 4) Resultados
+## 4) Resultados
 
-A continuación se presentan las evidencias de funcionamiento del sistema tanto en simulación digital como en montaje físico:
+A continuación se presentan las evidencias de funcionamiento del sistema, demostrando el comportamiento esperado:
 
 ### 4.1 Demostración en Simulación (Digital)
 <p align="center">
@@ -140,7 +140,22 @@ A continuación se presentan las evidencias de funcionamiento del sistema tanto 
 
 ### 4.2 Demostración en Hardware (Físico)
 <p align="center">
+
 https://github.com/user-attachments/assets/6c6a2f0c-a02e-4ec5-8352-e64ee4a22516
 
 </p>
-> 📹 **Respaldo:** En caso de requerir descarga directa, el archivo multimedia se encuentra en [`Video_Funcionamiento_Fisico.mp4`](./Recursos/videos/Video_Funcionamiento_Fisico.mp4)
+> 📹 **Respaldo:** En caso de requerir descarga directa, el archivo multimedia de funcionamiento físico se encuentra en [`Video_Funcionamiento_Fisico.mp4`](./Recursos/videos/Video_Funcionamiento_Fisico.mp4).
+
+### Validación de Comportamiento
+
+- **Aleatoriedad Inicial:** Al energizar el circuito, el sistema selecciona satisfactoriamente y sin intervención humana uno de los 3 LEDs (ya sea uno de los rojos o el azul).
+- **Rechazo de Errores:** Se comprobó que al presionar botones no vinculados al LED activo, el circuito mantiene su estado de forma estable, sin parpadeos ni reinicios accidentales, ignorando exitosamente las entradas incorrectas.
+- **Transición Exitosa:** Al accionar el botón correcto, el LED se apaga instantáneamente, se ejecuta el retardo de seguridad (antirrebote) y el sistema escoge un nuevo indicador luminoso al azar, validando la efectividad del bucle `do-while` para evitar la repetición del mismo LED.
+
+---
+
+## 5) Conclusiones
+
+La implementación de la práctica A1.3 se concluyó con éxito, cumpliendo íntegramente con los requisitos técnicos de escalabilidad y control aleatorio. La transición de un sistema de lectura simple a un sistema que gestiona múltiples señales simultáneas mediante el uso de arreglos en C++ demostró ser altamente eficiente. 
+
+El dimensionamiento del hardware mediante el uso de resistencias de 10 kΩ en configuración pull-down probó su eficacia al prevenir interferencias o lecturas "flotantes" entre los 3 botones montados en la misma protoboard. Asimismo, la lógica condicional que asocia los índices de los componentes permitió resolver el problema de interacción cruzada, garantizando que el sistema solo avance cuando la respuesta del usuario coincida con la salida activa. Este avance deja el hardware y la estructura algorítmica fundamental completamente preparados para la integración final de los contadores de aciertos, temporizadores y retroalimentación auditiva del juego de memoria.
