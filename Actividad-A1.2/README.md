@@ -130,24 +130,24 @@ A continuación se presentan las evidencias de funcionamiento del sistema tanto 
 https://github.com/user-attachments/assets/6c6a2f0c-a02e-4ec5-8352-e64ee4a22516
 
 </p>
-> 📹 **Respaldo:** En caso de requerir descarga directa, el archivo multimedia se encuentra en [`Video_Funcionamiento_Fisico.mp4`](./Recursos/videos/Video_Funcionamiento_Fisico.mp4)[cite: 1].
+> 📹 **Respaldo:** En caso de requerir descarga directa, el archivo multimedia se encuentra en [`Video_Funcionamiento_Fisico.mp4`](./Recursos/videos/Video_Funcionamiento_Fisico.mp4)
 
 ---
 
 ### Validación de Comportamiento
 
-- **Estado de Reposo:** Al energizar el circuito sin interactuar con el pulsador, el pin 12 detectó de forma continua un nivel lógico `0` (LOW) gracias a la resistencia pull-down, manteniendo el LED encendido de forma estable y sin parpadeos[cite: 1].
-- **Estado de Activación:** Al presionar y sostener el pulsador, el pin 12 conmutó a nivel lógico `1` (HIGH), provocando que el LED se apagara de manera inmediata[cite: 1]. Al soltar el botón, el LED regresó instantáneamente a su estado encendido[cite: 1].
+- **Estado de Reposo:** Al energizar el circuito sin interactuar con el pulsador, el pin 12 detectó de forma continua un nivel lógico `0` (LOW) gracias a la resistencia pull-down, manteniendo el LED encendido de forma estable y sin parpadeos
+- **Estado de Activación:** Al presionar y sostener el pulsador, el pin 12 conmutó a nivel lógico `1` (HIGH), provocando que el LED se apagara de manera inmediata. Al soltar el botón, el LED regresó instantáneamente a su estado encendido
 - **Monitoreo Serie:** La consola serial registró con precisión y en tiempo real las transiciones numéricas (`0` y `1`) conforme a la interacción con el circuito.
 
 ---
 
 ## 5) Conclusiones
 
-Se implementó y validó con éxito la primera etapa del sistema de entretenimiento, cumpliendo con la totalidad de los requerimientos técnicos fijados para la actividad A1.2[cite: 1]:
+Se implementó y validó con éxito la primera etapa del sistema de entretenimiento, cumpliendo con la totalidad de los requerimientos técnicos fijados para la actividad A1.2:
 
 - El dimensionamiento de la resistencia limitadora de 220 Ω mediante la Ley de Ohm demostró garantizar la protección eléctrica del diodo sin sacrificar visibilidad luminosa.
 - La configuración pull-down con resistencia de 10 kΩ eliminó por completo los estados flotantes y el ruido en la entrada digital, asegurando lecturas booleanas limpias y repetibles.
-- La estructura de control desarrollada en Arduino IDE validó el correcto manejo de entradas y salidas digitales bajo una lógica condicional invertida[cite: 1].
+- La estructura de control desarrollada en Arduino IDE validó el correcto manejo de entradas y salidas digitales bajo una lógica condicional invertida.
 
-Esta arquitectura modular y documentada establece las bases técnicas necesarias para la siguiente fase del proyecto, en la cual se integrarán los dos botones y LEDs restantes, las rutinas de temporización y la generación aleatoria de secuencias para el juego de memoria completo[cite: 1].
+Esta arquitectura modular y documentada establece las bases técnicas necesarias para la siguiente fase del proyecto, en la cual se integrarán los dos botones y LEDs restantes, las rutinas de temporización y la generación aleatoria de secuencias para el juego de memoria completo.
