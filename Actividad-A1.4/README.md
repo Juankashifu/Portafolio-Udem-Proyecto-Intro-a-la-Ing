@@ -41,7 +41,7 @@ El objetivo de esta práctica es implementar el circuito integrado L293D (Puente
 
 **Diagrama de conexiones:**
 <p align="left">
- <img src="Recursos/imgs/image_031d13.png" alt="Demostración Digital en Tinkercad" width="1000">
+ <img src="Recursos/imgs/Circuito_tinkercad.png" alt="Demostración Digital en Tinkercad" width="1000">
 </p>
 
 *(Nota: El archivo de imagen se encuentra adjunto en el repositorio).*
@@ -112,3 +112,30 @@ void loop() {
   digitalWrite(in4, LOW);
   delay(2000); 
 }
+```
+(Nota: El archivo fuente tipo .ino se encuentra adjunto en el repositorio ). 
+
+---
+
+## 4) Resultados
+
+A continuación se presentan las evidencias de funcionamiento del sistema, demostrando el comportamiento esperado:
+
+### 4.1 Demostración en Simulación (Digital)
+<p align="center">
+  <img src="Recursos/videos/Gif_Funcionamiento_Tinkercad.gif" alt="Demostración Digital en Tinkercad" width="1000">
+</p>
+
+### Validación de Comportamiento
+
+- **Tracción Secuencial:** Se corroboró visualmente en la simulación que ambos motores inician su marcha de forma simultánea al activarse las señales correspondientes desde el microcontrolador[cite: 4].
+- **Inversión Exitosa:** Tras transcurrir el tiempo establecido (2000 ms), la polaridad entregada por el L293D se invierte correctamente sin errores lógicos ni sobrecargas en la fuente, confirmando la conmutación adecuada de los interruptores internos del puente H[cite: 4].
+- **Paro Total y Ciclo Infinito:** El sistema interrumpe efectivamente la corriente hacia los motores durante la fase de detención (al enviar un estado `LOW` generalizado a las entradas de control[cite: 4]), reiniciando el ciclo de prueba de manera continua y estable.
+
+---
+
+## 5) Conclusiones
+
+La implementación de la práctica A1.4 concluyó con éxito, cumpliendo íntegramente con los requisitos técnicos de control de dirección y aislamiento de potencia mediante el puente H L293D. La integración de la fuente de alimentación externa configurada a 5 V permitió comprobar la necesidad imperativa de separar la etapa lógica del Arduino de la demanda energética de los actuadores mecánicos, previniendo daños permanentes en el microcontrolador.
+
+El manejo de los pines de habilitación y dirección mediante señales digitales en C++ demostró ser un método altamente eficiente para alterar la polaridad aplicada a los motores DC[cite: 4]. Asimismo, el correcto conexionado de las tierras comunes garantizó la estabilidad de las señales de control. Esta práctica consolida los principios fundamentales de la cinemática diferencial, dejando la arquitectura de hardware y software lista para su futura aplicación en plataformas robóticas móviles que requieran maniobras complejas de desplazamiento.
