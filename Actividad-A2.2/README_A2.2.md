@@ -12,7 +12,7 @@
   - Juan Carlos Valdés Pérez
   - Antonio Isidoro Ureña Chaidez
   - Marcelo Cantú Palacios
-  - Sofía Posask
+  - Sofía Posas
 - **Fecha:** 12/10/2026
 - **Placa:** ESP32 DevKit V1 (Espressif Systems)
 - **Descripción breve:** Implementación de un enlace de comunicación inalámbrica vía Bluetooth Classic (Perfil SPP) entre un dispositivo móvil Android y un microcontrolador ESP32. Se sustituyó el módulo HC-05/Arduino debido a fallas mecánicas de falso contacto en los módulos provistos, optando por el hardware integrado del ESP32 para sentar la arquitectura de control inalámbrico del rover de competencia de la UDEM.
@@ -116,22 +116,15 @@ void loop() {
 ```
 
 ---
-
 ## 4) Resultados
 
 ### 4.1 Evidencia de Conexión y Pruebas en Hardware
 
 <p align="center">
-  <img src="Recursos/imgs/Prueba_Bluetooth_Terminal.png" alt="Terminal Bluetooth Android" width="400">
+  <video controls src="Recursos/videos/Video_Funcionamiento_Fisico.MOV" alt="Terminal Bluetooth Android" width="300">
 </p>
 
-<p align="center">
-
-https://github.com/user-attachments/assets/6c6a2f0c-a02e-4ec5-8352-e64ee4a22516
-
-</p>
-
-> 📹 **Respaldo:** En caso de requerir descarga directa, el archivo multimedia se encuentra en [`Video_Funcionamiento_BT.mp4`](./Recursos/videos/Video_Funcionamiento_BT.mp4)
+> 📹 **Respaldo:** En caso de requerir descarga directa, el archivo multimedia se encuentra en [`Video_Funcionamiento_Fisico.MOV`](./Recursos/videos/Video_Funcionamiento_Fisico.MOV).
 
 ---
 
