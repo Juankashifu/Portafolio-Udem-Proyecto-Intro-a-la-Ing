@@ -1,141 +1,259 @@
-# 📚 Actividad A2.1: Control de Motores DC con Puente H L293D
+# 📚 Actividad A2.4: Control de Motores y Alerta Sonora por Proximidad mediante Sensor Ultrasónico
 
-> Implementación de un sistema de tracción bidireccional en Tinkercad utilizando Arduino y un controlador L293D para la materia de Proyectos Intro a la Ingeniería (UDEM). En esta práctica se gestiona el cambio de giro y la detención de dos motores de corriente continua.
+> Implementación de un sistema de detección de distancia y evitación de obstáculos con señalización acústica adaptativa y control PWM de motores utilizando Arduino Uno, un sensor HC-SR04 y un puente H L293D.
 
 ---
 
 ## 1) Resumen
 
-- **Materia:** Proyectos Intro a la Ingeniería
+- **Materia:** Proyecto de Introducción a la Ingeniería
 - **Profesor:** Dr. Antonio Martínez Torteya
-- **Equipo:** Juan Carlos Valdés Pérez, Antonio Isidoro Ureña Chaidez, Marcelo Cantú Palacios, Sofía Posas
-- **Fecha:** 28/09/2026
-- **Placa:** Arduino Uno R3 (Simulación en Tinkercad)
-- **Descripción breve:** Diseño y programación de un circuito en Tinkercad para controlar dos motores DC. Se utilizó un puente H (L293D) integrado a una fuente externa para proporcionar la potencia necesaria, permitiendo mediante código en C++ que los motores giren hacia adelante, inviertan su dirección y se detengan en un ciclo infinito y secuencial.
+- **Equipo:** 
+  - Juan Carlos Valdés Pérez
+  - Antonio Isidoro Ureña Chaidez 
+  - Marcelo Cantú Palacios
+  - Sofía Posas
+- **Fecha:** 12/10/2026
+- **Placa:** Arduino Uno R3 (Elegoo)
+- **Descripción breve:** Sistema robótico mecatrónico que integra un sensor de ultrasonido HC-SR04, un buzzer pasivo y un driver L293D para regular la velocidad de dos tracciones (4 motores en pares) y emitir alertas sonoras de frecuencia variable en función de la proximidad a un obstáculo.
 
 ---
 
 ## 2) Introducción
 
-El presente reporte documenta la integración de actuadores mecánicos (motores DC) controlados a través de un microcontrolador. Debido a que los motores requieren corrientes y voltajes superiores a los que un pin lógico del Arduino puede suministrar de manera segura, se hace indispensable el uso de una etapa de potencia independiente. 
+En los sistemas robóticos móviles e industriales autónomos, la percepción del entorno inmediato resulta fundamental para garantizar la navegación segura y prevenir colisiones. El sensado de distancia mediante ondas ultrasónicas constituye una de las técnicas más extendidas debido a su excelente relación costo-beneficio, inmunidad relativa a las condiciones de iluminación ambiental y capacidad para medir distancias en tiempo real sin contacto físico.
 
-El objetivo de esta práctica es implementar el circuito integrado L293D (Puente H) para aislar la lógica de control de la demanda energética de los motores. El sistema programado ejecuta un ciclo de prueba continuo en el que ambos motores avanzan sincronizadamente durante dos segundos, cambian su polaridad para retroceder otros dos segundos, y finalmente se detienen por completo antes de reiniciar el bucle, sentando las bases para el control de tracción de futuros proyectos móviles.
+El objetivo de esta práctica es diseñar, implementar y validar un circuito mecatrónico capaz de ajustar de forma dinámica el comportamiento de tracción de un chasis de cuatro motores (agrupados en dos pares mediante un driver L293D) y generar señales de advertencia sonora a través de un buzzer pasivo. Conforme un objeto reduce su distancia respecto al sensor HC-SR04, el sistema disminuye progresivamente la velocidad de avance de los motores y retrocede ante proximidades críticas, incrementando simultáneamente la frecuencia de tono e intermitencia del buzzer para alertar sobre una colisión inminente.
 
 ---
 
 ## 3) Metodología
 
-### 3.1 Conexiones y Hardware
+### 3.1 Conexiones
 
 **Componentes utilizados y justificación técnica:**
 
-- **1 Placa Microcontroladora (Arduino Uno R3):** Actúa como el cerebro del sistema. Los pines I/O del Arduino solo pueden suministrar un máximo absoluto de 40 mA por pin (recomendado 20 mA). Conectar un motor directamente quemaría la placa de inmediato.
-- **1 Driver de Motor L293D (Puente H):** Es el componente central para la etapa de potencia. Consta internamente de transistores configurados en "H" que funcionan como interruptores electrónicos. Permite que las señales de baja corriente del Arduino controlen el flujo de alta corriente hacia los motores. Además, el modelo L293**D** incluye diodos *flyback* internos que protegen al circuito de los picos de voltaje generados por la inducción cuando los motores se detienen.
-- **2 Motores de Aficionado (DC):** Actuadores rotativos para simular un sistema diferencial de tracción.
-- **1 Fuente de Alimentación Externa (Configurada a 5 V y 5 A):** Se utiliza para alimentar de manera exclusiva a los motores a través del pin VCC2 del puente H. 
-  - *Justificación matemática:* Los motores DC de aficionado en Tinkercad operan de manera óptima entre 3 V y 6 V, por lo que 5 V asegura buen torque sin sobrecalentamiento. En cuanto a la corriente, cada motor consume alrededor de 70-100 mA en funcionamiento libre y hasta ~500 mA en estado de bloqueo (*stall*). En el peor de los casos, ambos motores consumirían 1 A. Por ende, configurar el límite de la fuente a 5 A es completamente seguro (la fuente solo entrega lo que el circuito demanda) y está dentro de la capacidad de 600 mA por canal del L293D.
+- **Sensor Ultrasónico HC-SR04:** Utilizado como transductor principal de distancia. Funciona mediante la emisión de un pulso de ultrasonido de 40 kHz a través del transmisor (*Trigger*) y la medición del tiempo de vuelo ($t$) del eco reflejado en el receptor (*Echo*). Conociendo la velocidad del sonido en el aire a temperatura ambiente ($v \approx 343\text{ m/s} = 0.0343\text{ cm/\mu s}$), la distancia ($d$) se calcula como:
+  $$d = \frac{v \cdot t}{2} = \frac{0.0343\text{ cm/\mu s} \cdot t\ (\mu\text{s})}{2}$$
+  La división entre dos contempla el trayecto de ida y vuelta de la onda acústica.
+- **Circuit Integrado L293D (Puente H Quadruple Half-H Driver):** Permite el control bidireccional y la regulación de velocidad por modulación por ancho de pulso (PWM) de dos pares de motores DC. El chip aísla eléctricamente la lógica de control del Arduino respecto al consumo inductivo de los motores.
+- **4 Motores DC (Configurados en 2 pares de tracción):** 
+  - *Par Izquierdo ($M1 + M2$):* Conectados en paralelo a las salidas `OUT1` y `OUT2` del L293D.
+  - *Par Derecho ($M3 + M4$):* Conectados en paralelo a las salidas `OUT3` y `OUT4` del L293D.
+- **1 Buzzer Pasivo:** Indicador acústico de alerta. Requiere una señal de frecuencia modulada (proporcionada mediante la función `tone()` del microcontrolador) para hacer oscilar su diafragma piezoeléctrico y emitir tonos diferenciados.
+- **Protoboard y Cableado Jumper:** Para el interconectado ordenado del circuito integrado, sensor y periféricos.
 
 **Descripción de las conexiones físicas:**
-- **Control de Motores (Lógica):** Los pines de control para el Motor A se conectaron a los pines digitales 9 (Enable A), 8 (IN1) y 7 (IN2) del Arduino. Para el Motor B, se utilizaron los pines 3 (Enable B), 5 (IN3) y 4 (IN4).
-- **Potencia:** La alimentación lógica (VCC1) del puente H se conectó a los 5V del Arduino, mientras que la potencia para los motores (VCC2) se conectó al terminal positivo de la fuente de poder externa. Las tierras (GND) del Arduino, el L293D y la fuente externa se unificaron indispensablemente para establecer un nivel de referencia común (0V).
+
+- **Sensor Ultrasónico HC-SR04:**
+  - `VCC` a la línea de **5V** del Arduino.
+  - `GND` al riel común de tierra (**GND**).
+  - `TRIG` al **Pin Digital 12** (Salida digital).
+  - `ECHO` al **Pin Digital 11** (Entrada digital).
+- **Driver de Motores L293D:**
+  - `VCC1` (Pin 16 - Lógica) a la línea de **5V** del Arduino.
+  - `VCC2` (Pin 8 - Potencia) a la línea de **5V** del Arduino.
+  - `GND` (Pines 4, 5, 12, 13) conectados en común al **GND** de la placa.
+  - `ENA` (Pin 1 - PWM Canal A) al **Pin Digital 9** (Soporta PWM).
+  - `IN1` e `IN2` (Pines 2 y 7) a los **Pines Digitales 8 y 7** respectivamente.
+  - `ENB` (Pin 9 - PWM Canal B) al **Pin Digital 3** (Soporta PWM).
+  - `IN3` e `IN4` (Pines 10 y 15) a los **Pines Digitales 5 y 4** respectivamente.
+  - `OUT1` y `OUT2` (Pines 3 y 6) alimentan el **Par de Motores Izquierdo**.
+  - `OUT3` y `OUT4` (Pines 11 y 14) alimentan el **Par de Motores Derecho**.
+- **Buzzer Pasivo:**
+  - Terminal positiva al **Pin Digital 2** del Arduino.
+  - Terminal negativa conectada a tierra (**GND**).
 
 **Diagrama de conexiones:**
-<p align="left">
- <img src="Recursos/imgs/Circuito_tinkercad.png" alt="Demostración Digital en Tinkercad" width="1000">
-</p>
+![Diagrama de conexiones](Recursos/imgs/Circuito_3d.png)
 
-*(Nota: El archivo de imagen se encuentra adjunto en el repositorio).*
+*(Nota: El archivo de imagen y diagrama esquemático editable se encuentra adjunto en la carpeta `/Recursos/imgs/` del repositorio).*
 
 ---
 
-### 3.2 Diseño de Software
+### 3.2 Código
 
-El código fuente fue diseñado de manera secuencial utilizando la función `delay()` para gestionar las transiciones de estado de los motores.
+El sketch de Arduino está organizado modularmente en funciones de medición de tiempo de vuelo, control de estados de tracción del puente H mediante señales PWM y un temporizador no bloqueante para el generador de tono del buzzer pasivo.
 
-**Configuración Inicial (`setup`):**
-Se definieron todos los pines conectados al L293D como salidas (`OUTPUT`), incluyendo tanto los de habilitación (`enA`, `enB`) como los de control de giro (`in1` a `in4`). Para asegurar que el sistema inicie en reposo absoluto, se mandó un estado lógico `LOW` a todas las entradas de dirección.
+**Declaración de variables y prototipos:**
+Se asignan constantes de tipo `uint8_t` para los pines del sensor (`TRIG_PIN = 12`, `ECHO_PIN = 11`), del buzzer (`BUZZER_PIN = 2`) y de las señales de entrada/habilitación del driver L293D (`ENA = 9`, `IN1 = 8`, `IN2 = 7`, `ENB = 3`, `IN3 = 5`, `IN4 = 4`). Se inicializa la variable `lastBeepMs` para gestionar los intervalos de alerta auditiva sin detener la ejecución global.
 
-**Ejecución Principal (`loop`):**
-El ciclo de trabajo se dividió en tres etapas fundamentales. Primero, se habilitan ambos canales (`HIGH` en `enA` y `enB`). 
-1. **Giro inicial:** `in1` e `in3` se ponen en estado `HIGH` mientras que `in2` e `in4` en `LOW`, generando el giro en un sentido durante 2000 ms.
-2. **Inversión de giro:** Se invierten los estados lógicos (`in1/in3` a `LOW` y `in2/in4` a `HIGH`), alterando la polaridad entregada por el L293D y forzando a los motores a girar en sentido contrario durante otros 2000 ms.
-3. **Freno/Reposo:** Se envían señales `LOW` a las cuatro entradas de dirección, deteniendo el flujo de corriente hacia los motores durante 2000 ms antes de repetir el bucle continuo.
+**Configuración (`setup()`):**
+Se definen los modos de operación de los pines con `pinMode()`: el pin `TRIG_PIN` y las líneas del L293D/Buzzer se configuran como salidas (`OUTPUT`), mientras que `ECHO_PIN` se establece como entrada (`INPUT`). Finalmente, se invoca `stopMotors()` para garantizar un estado seguro en reposo al energizar el microcontrolador.
 
-**Código Fuente:**
+**Ciclo Principal (`loop()`):**
+Mide constantemente la distancia invoking a `measureDistanceCm()` y aplica la siguiente máquina de decisiones:
+1. **Error / Fuera de rango ($cm \le 0$):** Inicia un avance cauteloso (`forward(120)`) y desactiva el sonido con `noTone()`.
+2. **Zona Crítica / Peligro ($cm \le 20.0\text{ cm}$):** Detiene la marcha inmediatamente, genera una alarma rápida en el buzzer (1800 Hz cada 120 ms) y realiza una maniobra evasiva en reversa (`backward(170)`) antes de hacer una breve pausa de seguridad.
+3. **Zona de Advertencia ($20.0\text{ cm} < cm \le 40.0\text{ cm}$):** Reduce la velocidad de avance a $140/255$ e inicia una señal sonora de aviso con menor frecuencia e intermitencia (1200 Hz cada 350 ms).
+4. **Zona Mínimo Riesgo / Despejado ($cm > 40.0\text{ cm}$):** Incrementa la tracción a velocidad crucero de $200/255$ y apaga la alerta sonora.
+
+**Funciones Auxiliares:**
+- `measureDistanceCm()`: Genera un pulso TTL de 10 $\mu$s en el pin `TRIG_PIN` y mide con `pulseIn()` el tiempo de nivel alto en `ECHO_PIN` (con un *timeout* de 25 ms, equivalente a $4\text{ m}$). Calcula y retorna la distancia en centímetros.
+- `forward(speedPwm)` y `backward(speedPwm)`: Establecen el sentido de rotación polarizando las entradas de control `IN1-IN4` del L293D y envían el ciclo de trabajo mediante `analogWrite()` a las entradas `ENA` y `ENB`.
+- `stopMotors()`: Aplica un freno pasivo enviando valor `0` de PWM a las habilitaciones y nivel lógico bajo a las cuatro entradas de control.
+- `beepEvery(intervalMs, freqHz)`: Compara el tiempo actual mediante `millis()` contra `lastBeepMs`. Si transcurrió el intervalo programado, emite una ráfaga sonora de 70 ms con la frecuencia dada mediante la función `tone()`.
+
+**Código:**
 
 ```cpp
-int enA = 9; 
-int in1 = 8;
-int in2 = 7; 
+// Fusion: HC-SR04 + buzzer + control de 2 motores con puente H
+// Arduino Uno
+//
+// Motor izquierdo  (M1) -> OUT1/OUT2
+// Motor derecho    (M2) -> OUT3/OUT4
 
-int enB = 3; 
-int in3 = 5; 
-int in4 = 4; 
+const uint8_t TRIG_PIN = 12;
+const uint8_t ECHO_PIN = 11;
+const uint8_t BUZZER_PIN = 10;
 
-void setup(){
-	pinMode(enA, OUTPUT); 
-	pinMode(enB, OUTPUT);
-	pinMode(in1, OUTPUT);
-	pinMode(in2, OUTPUT);
-	pinMode(in3, OUTPUT);
-	pinMode(in4, OUTPUT);
-	
-	digitalWrite(in1, LOW); 
-	digitalWrite(in2, LOW);
-	digitalWrite(in3, LOW);
-	digitalWrite(in4, LOW);
+// L293D
+const uint8_t ENA = 9;  // PWM canal A
+const uint8_t IN1 = 8;
+const uint8_t IN2 = 7;
+const uint8_t ENB = 6;  // PWM canal B (evita conflicto con tone() en Timer2)
+const uint8_t IN3 = 5;
+const uint8_t IN4 = 4;
+
+unsigned long lastBeepMs = 0;
+
+float measureDistanceCm();
+void forward(uint8_t speedPwm);
+void backward(uint8_t speedPwm);
+void stopMotors();
+void beepEvery(unsigned long intervalMs, unsigned int freqHz);
+
+void setup() {
+  pinMode(TRIG_PIN, OUTPUT);
+  pinMode(ECHO_PIN, INPUT);
+  pinMode(BUZZER_PIN, OUTPUT);
+
+  pinMode(ENA, OUTPUT);
+  pinMode(ENB, OUTPUT);
+  pinMode(IN1, OUTPUT);
+  pinMode(IN2, OUTPUT);
+  pinMode(IN3, OUTPUT);
+  pinMode(IN4, OUTPUT);
+
+  stopMotors();
 }
 
 void loop() {
-  
-  digitalWrite(enA, HIGH); 
-  digitalWrite(enB, HIGH);
-  
-  // 1. Motores giran en dirección inicial
-  digitalWrite(in1, HIGH); 
-  digitalWrite(in2, LOW);
-  digitalWrite(in3, HIGH);
-  digitalWrite(in4, LOW);
-  delay(2000); 
-  
-  // 2. Motores cambian de dirección
-  digitalWrite(in1, LOW);
-  digitalWrite(in2, HIGH); 
-  digitalWrite(in3, LOW);
-  digitalWrite(in4, HIGH); 
-  delay(2000); 
-	
-  // 3. Motores se detienen
-  digitalWrite(in1, LOW);
-  digitalWrite(in2, LOW);
-  digitalWrite(in3, LOW);
-  digitalWrite(in4, LOW);
-  delay(2000); 
+  const float cm = measureDistanceCm();
+
+  // Si no hay lectura válida, avance suave por seguridad.
+  if (cm <= 0) {
+    forward(120);
+    noTone(BUZZER_PIN);
+    delay(80);
+    return;
+  }
+
+  if (cm <= 15.0) {
+    // Muy cerca: alerta rápida y retroceso breve
+    stopMotors();
+    beepEvery(120, 1800);
+    delay(100);
+
+    backward(170);
+    delay(250);
+    stopMotors();
+    delay(80);
+  } else if (cm <= 40.0) {
+    // Distancia media: avance lento + beep intermitente
+    forward(140);
+    beepEvery(350, 1200);
+    delay(80);
+  } else {
+    // Lejos: avance normal sin alarma
+    forward(200);
+    noTone(BUZZER_PIN);
+    delay(80);
+  }
+}
+
+float measureDistanceCm() {
+  digitalWrite(TRIG_PIN, LOW);
+  delayMicroseconds(2);
+  digitalWrite(TRIG_PIN, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(TRIG_PIN, LOW);
+
+  // Timeout ~25 ms (aprox 4 m)
+  const unsigned long duration = pulseIn(ECHO_PIN, HIGH, 25000UL);
+  if (duration == 0) {
+    return -1.0;
+  }
+
+  return (duration * 0.0343f) / 2.0f;
+}
+
+void forward(uint8_t speedPwm) {
+  analogWrite(ENA, speedPwm);
+  analogWrite(ENB, speedPwm);
+
+  digitalWrite(IN1, HIGH);
+  digitalWrite(IN2, LOW);
+  digitalWrite(IN3, HIGH);
+  digitalWrite(IN4, LOW);
+}
+
+void backward(uint8_t speedPwm) {
+  analogWrite(ENA, speedPwm);
+  analogWrite(ENB, speedPwm);
+
+  digitalWrite(IN1, LOW);
+  digitalWrite(IN2, HIGH);
+  digitalWrite(IN3, LOW);
+  digitalWrite(IN4, HIGH);
+}
+
+void stopMotors() {
+  analogWrite(ENA, 0);
+  analogWrite(ENB, 0);
+
+  digitalWrite(IN1, LOW);
+  digitalWrite(IN2, LOW);
+  digitalWrite(IN3, LOW);
+  digitalWrite(IN4, LOW);
+}
+
+void beepEvery(unsigned long intervalMs, unsigned int freqHz) {
+  const unsigned long now = millis();
+
+  if (now - lastBeepMs >= intervalMs) {
+    tone(BUZZER_PIN, freqHz, 70);
+    lastBeepMs = now;
+  }
 }
 ```
-(Nota: El archivo fuente tipo .ino se encuentra adjunto en el repositorio ). 
-
----
+--- 
 
 ## 4) Resultados
 
-A continuación se presentan las evidencias de funcionamiento del sistema, demostrando el comportamiento esperado:
+A continuación se presentan las evidencias de funcionamiento del sistema tanto en simulación digital:
 
 ### 4.1 Demostración en Simulación (Digital)
 <p align="center">
-  <img src="Recursos/videos/Gif_Funcionamiento_Tinkercad.gif" alt="Demostración Digital en Tinkercad" width="1000">
+  <img src="Recursos/videos/Video_Funcionamiento_Tinkered.gif" alt="Demostración Digital en Tinkercad" width="600">
 </p>
+
+---
 
 ### Validación de Comportamiento
 
-- **Tracción Secuencial:** Se corroboró visualmente en la simulación que ambos motores inician su marcha de forma simultánea al activarse las señales correspondientes desde el microcontrolador.
-- **Inversión Exitosa:** Tras transcurrir el tiempo establecido (2000 ms), la polaridad entregada por el L293D se invierte correctamente sin errores lógicos ni sobrecargas en la fuente, confirmando la conmutación adecuada de los interruptores internos del puente H.
-- **Paro Total y Ciclo Infinito:** El sistema interrumpe efectivamente la corriente hacia los motores durante la fase de detención (al enviar un estado `LOW` generalizado a las entradas de control), reiniciando el ciclo de prueba de manera continua y estable.
+- **Zona Despejada ($> 40\text{ cm}$):** Los motores mantuvieron un avance continuo a una velocidad equivalente al 78% del ciclo de trabajo (PWM = 200), y el buzzer pasivo permaneció completamente en silencio[cite: 1].
+- **Zona de Advertencia ($20\text{ cm} \text{ a } 40\text{ cm}$):** Al aproximar un obstáculo, la velocidad disminuyó automáticamente a un nivel PWM de 140 (~55%), y el buzzer comenzó a emitir un tono intermitente de 1200 Hz con intervalos de 350 ms[cite: 1].
+- **Zona de Peligro ($\le 20\text{ cm}$):** Ante una intercepción cercana, el robot detuvo su marcha, emitió tonos agudos de 1800 Hz a alta frecuencia (cada 120 ms) e inició una maniobra de retroceso de seguridad (PWM = 170) durante 250 ms para alejarse del obstáculo[cite: 1].
 
 ---
 
 ## 5) Conclusiones
 
-La implementación de la práctica A1.4 concluyó con éxito, cumpliendo íntegramente con los requisitos técnicos de control de dirección y aislamiento de potencia mediante el puente H L293D. La integración de la fuente de alimentación externa configurada a 5 V permitió comprobar la necesidad imperativa de separar la etapa lógica del Arduino de la demanda energética de los actuadores mecánicos, previniendo daños permanentes en el microcontrolador.
+Se logró diseñar e implementar exitosamente el sistema de detección y evitación de obstáculos con señalización acústica adaptativa para la Actividad A2.4[cite: 1]:
 
-El manejo de los pines de habilitación y dirección mediante señales digitales en C++ demostró ser un método altamente eficiente para alterar la polaridad aplicada a los motores DC. Asimismo, el correcto conexionado de las tierras comunes garantizó la estabilidad de las señales de control. Esta práctica consolida los principios fundamentales de la cinemática diferencial, dejando la arquitectura de hardware y software lista para su futura aplicación en plataformas robóticas móviles que requieran maniobras complejas de desplazamiento.
+- El cálculo de distancia basado en el tiempo de vuelo de la onda ultrasónica del HC-SR04 permitió establecer umbrales lógicos precisos para la toma de decisiones del sistema en tiempo real[cite: 1].
+- La etapa de potencia controlada con el CI L293D reguló eficientemente la velocidad de las dos tracciones de motores mediante modulación PWM, demostrando una transición suave entre los estados de velocidad crucero, marcha lenta y maniobra evasiva de retroceso[cite: 1].
+- El manejo del buzzer pasivo mediante temporización no bloqueante basada en `millis()` garantizó una respuesta sonórica clara sin comprometer el tiempo de muestreo del sensor ni congelar el hilo principal de ejecución[cite: 1].
+
+Este desarrollo sienta las bases técnicas para la integración posterior de algoritmos de navegación autónoma más avanzados, tales como el seguimiento de muros o el mapeo de entornos[cite: 1].
