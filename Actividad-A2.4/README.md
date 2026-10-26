@@ -33,9 +33,8 @@ El objetivo de esta práctica es diseñar, implementar y validar un circuito mec
 
 **Componentes utilizados y justificación técnica:**
 
-- **Sensor Ultrasónico HC-SR04:** Utilizado como transductor principal de distancia. Funciona mediante la emisión de un pulso de ultrasonido de 40 kHz a través del transmisor (*Trigger*) y la medición del tiempo de vuelo ($t$) del eco reflejado en el receptor (*Echo*). Conociendo la velocidad del sonido en el aire a temperatura ambiente ($v \approx 343\text{ m/s} = 0.0343\text{ cm/\mu s}$), la distancia ($d$) se calcula como:
-  $$d = \frac{v \cdot t}{2} = \frac{0.0343\text{ cm/\mu s} \cdot t\ (\mu\text{s})}{2}$$
-  La división entre dos contempla el trayecto de ida y vuelta de la onda acústica.
+- **Sensor Ultrasónico HC-SR04:** Utilizado como transductor principal de distancia. Funciona mediante la emisión de un pulso de ultrasonido de 40 kHz a través del transmisor (*Trigger*) y la medición del tiempo de vuelo ($t$) del eco reflejado en el receptor (*Echo*). 
+
 - **Circuit Integrado L293D (Puente H Quadruple Half-H Driver):** Permite el control bidireccional y la regulación de velocidad por modulación por ancho de pulso (PWM) de dos pares de motores DC. El chip aísla eléctricamente la lógica de control del Arduino respecto al consumo inductivo de los motores.
 - **4 Motores DC (Configurados en 2 pares de tracción):** 
   - *Par Izquierdo ($M1 + M2$):* Conectados en paralelo a las salidas `OUT1` y `OUT2` del L293D.
