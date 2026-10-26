@@ -65,7 +65,8 @@ El objetivo de esta práctica es diseñar, implementar y validar un circuito mec
   - Terminal negativa conectada a tierra (**GND**).
 
 **Diagrama de conexiones:**
-![Diagrama de conexiones](Recursos/imgs/Circuito_3d.png)
+![Diagrama de conexiones 3d](Recursos/imgs/Circuito_3d.png)
+![Diagrama de conexiones esquematico](Recursos/imgs/Circuito_esquematico.png)
 
 *(Nota: El archivo de imagen y diagrama esquemático editable se encuentra adjunto en la carpeta `/Recursos/imgs/` del repositorio).*
 
