@@ -145,16 +145,11 @@ A continuación se anexan los elementos de prueba y validación visual del funci
 
 ### 4.1 Demostración en Simulación (Digital)
 <p align="center">
-  <img src="Recursos/videos/Video_Funcionamiento_Tinkercad.gif" alt="Demostración Digital de Puertas Lógicas" width="600">
+  <img src="Recursos/videos/Gif_Funcionamiento_Tinkercad.gif" alt="Demostración Digital de Puertas Lógicas" width="600">
 </p>
 
-### 4.2 Demostración en Hardware (Físico)
-<p align="center">
-
-https://github.com/user-attachments/assets/REEMPLAZAR_CON_TU_ID_DE_VIDEO
-
 </p>
-> 📹 **Respaldo:** El archivo multimedia se encuentra almacenado en [`Video_Funcionamiento_Fisico.mp4`](./Recursos/videos/Video_Funcionamiento_Fisico.mp4)
+> 📹 **Respaldo:** El archivo multimedia se encuentra almacenado en [`Gif_Funcionamiento_Tinkercad.gif`](./Recursos/videos/Gif_Funcionamiento_Tinkercad.gif)
 
 ---
 
@@ -169,17 +164,17 @@ https://github.com/user-attachments/assets/REEMPLAZAR_CON_TU_ID_DE_VIDEO
 | **2** | **NOT** | `LOW` (0) | N/A | 1 | **Encendido** |
 | **2** | **NOT** | `HIGH` (1) | N/A | 0 | Apagado |
 
-- **Conmutación de Operaciones:** El pulso en `PIN_MODO` conmuta de forma fluida la lógica de evaluación booleana, eliminando lecturas eráticas por falso contacto mecánico gracias al filtro de retardo de 50 ms[cite: 1, 2].
-- **Monitoreo Serie Eficiente:** El filtro condicional `if (estado != ultimaSalida)` optimizó la transmisión de datos por el Monitor Serial a 9600 baudios, transmitiendo información únicamente ante variaciones en las entradas o cambios en la selección del modo[cite: 1].
+- **Conmutación de Operaciones:** El pulso en `PIN_MODO` conmuta de forma fluida la lógica de evaluación booleana, eliminando lecturas eráticas por falso contacto mecánico gracias al filtro de retardo de 50 ms.
+- **Monitoreo Serie Eficiente:** El filtro condicional `if (estado != ultimaSalida)` optimizó la transmisión de datos por el Monitor Serial a 9600 baudios, transmitiendo información únicamente ante variaciones en las entradas o cambios en la selección del modo.
 
 ---
 
 ## 5) Conclusiones
 
-La realización de esta práctica permitió implementar y validar satisfactoriamente la simulación de compuertas lógicas digitales (AND, OR y NOT) sobre la plataforma Arduino Uno R3[cite: 1, 2]:
+La realización de esta práctica permitió implementar y validar satisfactoriamente la simulación de compuertas lógicas digitales (AND, OR y NOT) sobre la plataforma Arduino Uno R3:
 
-- Se confirmó experimentalmente el comportamiento booleano en hardware y software, verificando que la salida del indicador LED responde fielmente a las tablas de verdad teóricas de cada operación[cite: 1, 2].
-- El cálculo e implementación de arreglos de resistencias pull-down externas de 10 kΩ demostró ser indispensable para garantizar niveles lógicos $0\text{ V}$ estables, eliminando por completo el ruido electromagnético y el fenómeno de pin flotante[cite: 1, 2].
-- La estructura algorítmica de conmutación de modos basada en detección de flancos y filtrado de telemetría serial aseguró un procesamiento eficiente en el microcontrolador[cite: 1, 2].
+- Se confirmó experimentalmente el comportamiento booleano en hardware y software, verificando que la salida del indicador LED responde fielmente a las tablas de verdad teóricas de cada operación.
+- El cálculo e implementación de arreglos de resistencias pull-down externas de 10 kΩ demostró ser indispensable para garantizar niveles lógicos $0\text{ V}$ estables, eliminando por completo el ruido electromagnético y el fenómeno de pin flotante.
+- La estructura algorítmica de conmutación de modos basada en detección de flancos y filtrado de telemetría serial aseguró un procesamiento eficiente en el microcontrolador.
 
-Este avance consolida los conceptos fundamentales de lógica digital necesarios para el desarrollo de rutinas de control más complejas en las subsecuentes etapas del proyecto integrador[cite: 1].
+Este avance consolida los conceptos fundamentales de lógica digital necesarios para el desarrollo de rutinas de control más complejas en las subsecuentes etapas del proyecto integrador.
